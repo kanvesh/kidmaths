@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Quizzes</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --accent: #4361ee;
+    --accent-dark: #2f42b0;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --border: #e2e5ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 16px 60px;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  a.quiz-card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: all 0.15s ease;
+  }
+  a.quiz-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 14px rgba(67, 97, 238, 0.12);
+    transform: translateY(-2px);
+  }
+  .quiz-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--accent-dark);
+  }
+  .quiz-desc {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .arrow {
+    float: right;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Which Number Is Bigger?</h1>
+    <div class="subtitle">Pick a difficulty range to start practicing</div>
+  </header>
+
+  <div class="card-list">
+    <a class="quiz-card" href="bigger_number_quiz_200.html">
+      <span class="arrow">→</span>
+      <div class="quiz-title">Numbers up to 200</div>
+      <div class="quiz-desc">5 sets, progressively harder, 0–30 through 0–199</div>
+    </a>
+
+    <a class="quiz-card" href="bigger_number_quiz_500.html">
+      <span class="arrow">→</span>
+      <div class="quiz-title">Numbers up to 500</div>
+      <div class="quiz-desc">5 sets, progressively harder, 0–75 through 0–500</div>
+    </a>
+
+    <a class="quiz-card" href="bigger_number_quiz_1000.html">
+      <span class="arrow">→</span>
+      <div class="quiz-title">Numbers up to 1000</div>
+      <div class="quiz-desc">5 sets, progressively harder, 0–150 through 0–1000</div>
+    </a>
+  </div>
+
+  <footer>Each quiz has 5 rotating sets of 25 questions, with a skip option and freshly randomized numbers every time.</footer>
+</div>
+</body>
+</html>

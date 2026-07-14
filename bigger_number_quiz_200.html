@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Number Is Bigger? Quiz</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --accent: #4361ee;
+    --accent-dark: #2f42b0;
+    --correct: #2e7d32;
+    --correct-bg: #e8f5e9;
+    --wrong: #c62828;
+    --wrong-bg: #fdecea;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --border: #e2e5ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px 12px 60px;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 1.7rem;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .set-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 14px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .progress-bar {
+    height: 8px;
+    width: 100%;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 16px 0 28px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.2s ease;
+  }
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .q-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .q-prompt {
+    font-size: 1rem;
+    margin-bottom: 14px;
+  }
+  .options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .opt-btn {
+    flex: 1 1 120px;
+    padding: 12px 10px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: #fafbff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--text);
+  }
+  .opt-btn:hover {
+    border-color: var(--accent);
+    background: #eef1ff;
+  }
+  .opt-btn.selected {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+  .opt-btn.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+    color: var(--correct);
+  }
+  .opt-btn.wrong {
+    border-color: var(--wrong);
+    background: var(--wrong-bg);
+    color: var(--wrong);
+  }
+  .opt-btn:disabled {
+    cursor: default;
+  }
+  .result-icon {
+    margin-left: 8px;
+    font-weight: 700;
+  }
+  .action-row {
+    text-align: center;
+    margin-top: 24px;
+  }
+  #submitBtn, #nextSetBtn, #skipBtn {
+    padding: 13px 34px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    margin: 6px;
+  }
+  #submitBtn:hover, #nextSetBtn:hover {
+    background: var(--accent-dark);
+  }
+  #submitBtn:disabled {
+    background: #b7bee0;
+    cursor: not-allowed;
+  }
+  .secondary-btn {
+    background: #fff !important;
+    color: var(--accent) !important;
+    border: 2px solid var(--accent) !important;
+  }
+  .secondary-btn:hover {
+    background: #eef1ff !important;
+  }
+  .eval-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .eval-score {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 6px 0;
+  }
+  .eval-msg {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .eval-detail {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .unanswered-note {
+    text-align: center;
+    color: var(--wrong);
+    font-size: 0.9rem;
+    margin-top: 6px;
+    min-height: 1.2em;
+  }
+  footer {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Which Number Is Bigger?</h1>
+    <div class="subtitle">25 questions &middot; numbers under 200 &middot; 5 rotating sets</div>
+    <div class="set-badge" id="setBadge">Set 1 of 5</div>
+  </header>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div id="quizContainer"></div>
+
+  <div class="unanswered-note" id="unansweredNote"></div>
+
+  <div class="action-row" id="actionRow">
+    <button id="submitBtn">Submit Answers</button>
+    <button id="skipBtn" class="secondary-btn">Skip Set →</button>
+  </div>
+
+  <div id="evalContainer"></div>
+
+  <footer>Refresh or click "Next Set" to cycle through all 5 sets.</footer>
+</div>
+
+<script>
+(function () {
+  const NUM_SETS = 5;
+  const NUM_QUESTIONS = 25;
+  const MAX_NUM = 199; // numbers under 200 -> 0..199
+
+  function generateSet(maxNum) {
+    const questions = [];
+    for (let i = 0; i < NUM_QUESTIONS; i++) {
+      let a = Math.floor(Math.random() * (maxNum + 1));
+      let b = Math.floor(Math.random() * (maxNum + 1));
+      while (b === a) {
+        b = Math.floor(Math.random() * (maxNum + 1));
+      }
+      // randomize left/right order
+      if (Math.random() < 0.5) { [a, b] = [b, a]; }
+      questions.push({ a, b, answer: a > b ? a : b });
+    }
+    return questions;
+  }
+
+  // Difficulty increases each set; numbers are freshly randomized every time a set starts
+  const MAX_RANGES = [30, 70, 110, 150, MAX_NUM]; // set 1 easiest, set 5 hardest (up to 199)
+  const ALL_SETS = MAX_RANGES.map(maxNum => generateSet(maxNum));
+
+  // Determine which set to show, cycling 0..4 each visit
+  const STORAGE_KEY = 'bigger_number_quiz_set_index';
+  let setIndex = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+  if (isNaN(setIndex) || setIndex < 0 || setIndex >= NUM_SETS) {
+    setIndex = 0;
+  }
+
+  const currentSet = ALL_SETS[setIndex];
+  const userAnswers = new Array(NUM_QUESTIONS).fill(null);
+
+  document.getElementById('setBadge').textContent =
+    `Set ${setIndex + 1} of ${NUM_SETS} · numbers up to ${MAX_RANGES[setIndex]}`;
+
+  const quizContainer = document.getElementById('quizContainer');
+  const progressFill = document.getElementById('progressFill');
+  const submitBtn = document.getElementById('submitBtn');
+  const unansweredNote = document.getElementById('unansweredNote');
+  const evalContainer = document.getElementById('evalContainer');
+  const actionRow = document.getElementById('actionRow');
+
+  function updateProgress() {
+    const answered = userAnswers.filter(v => v !== null).length;
+    progressFill.style.width = `${(answered / NUM_QUESTIONS) * 100}%`;
+  }
+
+  function renderQuestions() {
+    quizContainer.innerHTML = '';
+    currentSet.forEach((q, idx) => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.id = `q-card-${idx}`;
+
+      const label = document.createElement('div');
+      label.className = 'q-label';
+      label.textContent = `Question ${idx + 1} of ${NUM_QUESTIONS}`;
+
+      const prompt = document.createElement('div');
+      prompt.className = 'q-prompt';
+      prompt.textContent = 'Which number is bigger?';
+
+      const options = document.createElement('div');
+      options.className = 'options';
+
+      [q.a, q.b].forEach((val) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = val;
+        btn.type = 'button';
+        btn.addEventListener('click', () => {
+          userAnswers[idx] = val;
+          const siblingBtns = options.querySelectorAll('.opt-btn');
+          siblingBtns.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          updateProgress();
+        });
+        options.appendChild(btn);
+      });
+
+      card.appendChild(label);
+      card.appendChild(prompt);
+      card.appendChild(options);
+      quizContainer.appendChild(card);
+    });
+  }
+
+  function evaluate() {
+    const unanswered = userAnswers.reduce((acc, v, i) => v === null ? acc.concat(i + 1) : acc, []);
+    if (unanswered.length > 0) {
+      unansweredNote.textContent = `Please answer all questions before submitting. Missing: Q${unanswered.join(', Q')}`;
+      return;
+    }
+    unansweredNote.textContent = '';
+
+    let correctCount = 0;
+    currentSet.forEach((q, idx) => {
+      const card = document.getElementById(`q-card-${idx}`);
+      const btns = card.querySelectorAll('.opt-btn');
+      const isCorrect = userAnswers[idx] === q.answer;
+      if (isCorrect) correctCount++;
+
+      btns.forEach(b => {
+        const val = parseInt(b.textContent, 10);
+        b.disabled = true;
+        b.classList.remove('selected');
+        if (val === q.answer) {
+          b.classList.add('correct');
+        } else if (val === userAnswers[idx] && !isCorrect) {
+          b.classList.add('wrong');
+        }
+      });
+    });
+
+    submitBtn.disabled = true;
+    submitBtn.style.display = 'none';
+
+    const pct = Math.round((correctCount / NUM_QUESTIONS) * 100);
+    let msg;
+    if (pct === 100) msg = "Perfect score! 🎉";
+    else if (pct >= 80) msg = "Great job!";
+    else if (pct >= 50) msg = "Not bad — keep practicing.";
+    else msg = "Keep practicing, you'll get there.";
+
+    evalContainer.innerHTML = `
+      <div class="eval-card">
+        <div class="eval-msg">${msg}</div>
+        <div class="eval-score">${correctCount} / ${NUM_QUESTIONS}</div>
+        <div class="eval-detail">${pct}% correct &middot; Set ${setIndex + 1} of ${NUM_SETS}</div>
+      </div>
+    `;
+
+    actionRow.innerHTML = '<button id="nextSetBtn">Next Set →</button>';
+    document.getElementById('nextSetBtn').addEventListener('click', () => {
+      const nextIndex = (setIndex + 1) % NUM_SETS;
+      localStorage.setItem(STORAGE_KEY, nextIndex);
+      location.reload();
+    });
+
+    window.scrollTo({ top: evalContainer.offsetTop - 20, behavior: 'smooth' });
+  }
+
+  submitBtn.addEventListener('click', evaluate);
+
+  document.getElementById('skipBtn').addEventListener('click', () => {
+    const nextIndex = (setIndex + 1) % NUM_SETS;
+    localStorage.setItem(STORAGE_KEY, nextIndex);
+    location.reload();
+  });
+
+  renderQuestions();
+  updateProgress();
+})();
+</script>
+</body>
+</html>
